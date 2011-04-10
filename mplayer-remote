@@ -56,11 +56,13 @@ our $fifo = "$dir/fifo";
     }
 	
     sub get_parm {
-	my $cgi = shift;
+	my $cgi     = shift;
+	my $default = shift;
+	$default = '' unless defined $default;
 
 	my @path = split '/', $cgi->path_info();
 	return $path[2] if defined $path[2];
-	return '';
+	return $default;
     }
 
     sub handle_request {
@@ -96,39 +98,54 @@ our $fifo = "$dir/fifo";
     }
 
     sub do_nothing {
-	# do nothing
+	my $cgi = shift;
+
     }
 
     sub do_start {
-	do_stop(@_);
+	my $cgi = shift;
+
+	do_stop($cgi);
 	system("mplayer -slave -quiet -input file=$MplayerRemote::fifo -playlist $MplayerRemote::playlist -input nodefault-bindings -noconfig all &");
     }
 
     sub do_stop {
+	my $cgi = shift;
+
 	system('killall', 'mplayer');
     }
     
     sub do_next {
-	cmd('pt_step +1');
+	my $cgi = shift;
+
+	cmd('pt_step ' . get_parm($cgi, '+1'));
 	osd('>|');
     }
 
     sub do_prev {
-	cmd('pt_step -1');
+	my $cgi = shift;
+
+	cmd('pt_step ' . get_parm($cgi, '-1'));
 	osd('|<');
     }
 
     sub do_ff {
-	cmd('seek +60 0');
+	my $cgi = shift;
+
+	cmd('seek ' . get_parm($cgi, '+60') . ' 0');
 	osd('>>');
     }
 
     sub do_fr {
-	cmd('seek -60 0');
+	my $cgi = shift;
+
+	cmd('seek ' . get_parm($cgi, '-60') . ' 0');
 	osd('<<');
     }
 
     sub do_pause {
+	my $cgi = shift;
+
 	cmd('pause');
 	osd('||');
     }
