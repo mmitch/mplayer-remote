@@ -37,22 +37,37 @@ our $fifo = "$dir/fifo";
     use base qw(HTTP::Server::Simple::CGI);
 
     my %dispatch = (
-	'/start' => \&do_start,
-	'/stop'  => \&do_stop,
-	'/next'  => \&do_next,
-	'/prev'  => \&do_prev,
-	'/pause' => \&do_pause,
-	'/ff'    => \&do_ff,
-	'/fr'    => \&do_fr,
-	'/'      => \&do_nothing,
+	'start' => \&do_start,
+	'stop'  => \&do_stop,
+	'next'  => \&do_next,
+	'prev'  => \&do_prev,
+	'pause' => \&do_pause,
+	'ff'    => \&do_ff,
+	'fr'    => \&do_fr,
+	''      => \&do_nothing,
         );
+
+    sub get_action {
+	my $cgi = shift;
+
+	my @path = split '/', $cgi->path_info();
+	return $path[1] if defined $path[1];
+	return '';
+    }
+	
+    sub get_parm {
+	my $cgi = shift;
+
+	my @path = split '/', $cgi->path_info();
+	return $path[2] if defined $path[2];
+	return '';
+    }
 
     sub handle_request {
 	my $self = shift;
 	my $cgi  = shift;
 
-	my $path = $cgi->path_info();
-	my $handler = $dispatch{$path};
+	my $handler = $dispatch{ get_action($cgi) };
 
 	if (ref($handler) eq "CODE") {
 	    print "HTTP/1.0 200 OK\r\n";
