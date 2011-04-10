@@ -88,9 +88,9 @@ our $fifo = "$dir/fifo";
     }
 
     sub cmd {
-	open  FIFO, '>', $MplayerRemote::fifo or die "can't open fifo `$MplayerRempte::fifo': $!";
+	open  FIFO, '>', $MplayerRemote::fifo or die "can't open fifo `$MplayerRemote::fifo': $!";
 	print FIFO "$_[0]\n";
-	close FIFO or die "can't close fifo `$MplayerRempte::fifo': $!";
+	close FIFO or die "can't close fifo `$MplayerRemote::fifo': $!";
 	warn "SENT: $_[0]\n";
 	
     }
