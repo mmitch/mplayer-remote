@@ -122,9 +122,13 @@ our $fifo = "$dir/fifo";
 	my $cgi  = shift;   # CGI.pm object
 	return if !ref $cgi;
 
-	print $cgi->header,
-	$cgi->start_html('mplayer remote'),
-	$cgi->p(
+	print $cgi->header;
+	print $cgi->start_html('mplayer remote');
+	
+	print $cgi->p($cgi->a({href=>$cgi->path_info()},'again'))
+	    unless $cgi->path_info() eq '/';
+
+	print $cgi->p(
 	    $cgi->a({href=>"/prev" },'|<'),
 	    ' : ',
 	    $cgi->a({href=>"/fr"   },'<<'),
@@ -142,7 +146,7 @@ our $fifo = "$dir/fifo";
 	    $cgi->br(),
 	    $cgi->small('mplayer remote')
 	    );
-	$cgi->end_html;
+	print $cgi->end_html;
     }
 
 }
