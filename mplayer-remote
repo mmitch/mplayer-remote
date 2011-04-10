@@ -37,14 +37,16 @@ our $fifo = "$dir/fifo";
     use base qw(HTTP::Server::Simple::CGI);
 
     my %dispatch = (
-	'start' => \&do_start,
-	'stop'  => \&do_stop,
-	'next'  => \&do_next,
-	'prev'  => \&do_prev,
-	'pause' => \&do_pause,
-	'ff'    => \&do_ff,
-	'fr'    => \&do_fr,
-	''      => \&do_nothing,
+	'start'   => \&do_start,
+	'stop'    => \&do_stop,
+	'next'    => \&do_next,
+	'prev'    => \&do_prev,
+	'pause'   => \&do_pause,
+	'ff'      => \&do_ff,
+	'fr'      => \&do_fr,
+	'volup'   => \&do_volup,
+	'voldown' => \&do_voldown,
+	''        => \&do_nothing,
         );
 
     sub get_action {
@@ -143,6 +145,20 @@ our $fifo = "$dir/fifo";
 	osd('<<');
     }
 
+    sub do_volup {
+	my $cgi = shift;
+
+	cmd('volume ' . get_parm($cgi, '+5'));
+	osd('((o))');
+    }
+
+    sub do_voldown {
+	my $cgi = shift;
+
+	cmd('volume ' . get_parm($cgi, '-5'));
+	osd('(o)');
+    }
+
     sub do_pause {
 	my $cgi = shift;
 
@@ -161,19 +177,23 @@ our $fifo = "$dir/fifo";
 	    unless $cgi->path_info() eq '/';
 
 	print $cgi->p(
-	    $cgi->a({href=>"/prev" },'|<'),
+	    $cgi->a({href=>"/prev"    },'|<'),
 	    ' : ',
-	    $cgi->a({href=>"/fr"   },'<<'),
+	    $cgi->a({href=>"/fr"      },'<<'),
 	    ' : ',
-	    $cgi->a({href=>"/pause"},'||'),
+	    $cgi->a({href=>"/pause"   },'||'),
 	    ' : ',
-	    $cgi->a({href=>"/ff"   },'>>'),
+	    $cgi->a({href=>"/ff"      },'>>'),
 	    ' : ',
-	    $cgi->a({href=>"/next" },'>|' ),
+	    $cgi->a({href=>"/next"    },'>|' ),
 	    $cgi->br(),
-	    $cgi->a({href=>"/start"},'|>'),
+	    $cgi->a({href=>"/voldown" },'-' ),
+	    ' VOL ',
+	    $cgi->a({href=>"/volup"   },'+'),
+	    $cgi->br(),
+	    $cgi->a({href=>"/start"   },'|>'),
 	    ' : ',
-	    $cgi->a({href=>"/stop" },'[]' ),
+	    $cgi->a({href=>"/stop"    },'[]' ),
 	    $cgi->br(),
 	    $cgi->br(),
 	    $cgi->small('mplayer remote')
