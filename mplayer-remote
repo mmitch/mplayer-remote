@@ -49,6 +49,36 @@ our $fifo = "$dir/fifo";
 	''        => \&do_nothing,
         );
 
+    my $JSCRIPT=<<END;
+    function keypress(e)
+    {
+	var keynum;
+        if(e.which) { keynum = e.which; }// Netscape/Firefox/Opera
+	    else
+	    if(window.event) { keynum = e.keyCode; } // IE
+	    
+	    if (keynum == 70) { window.location = '/start' }
+        else
+	    if (keynum == 86) { window.location = '/stop' }
+        else
+	    if (keynum == 68) { window.location = '/next' }
+        else
+	    if (keynum == 67) { window.location = '/prev' }
+        else
+	    if (keynum == 32) { window.location = '/pause' }
+        else
+	    if (keynum == 65) { window.location = '/ff' }
+        else
+	    if (keynum == 90) { window.location = '/fr' }
+        else
+	    if (keynum == 83) { window.location = '/volup' }
+        else
+	    if (keynum == 88) { window.location = '/voldown' }
+    }
+END
+    ;
+       
+
     sub get_action {
 	my $cgi = shift;
 
@@ -108,7 +138,7 @@ our $fifo = "$dir/fifo";
 	my $cgi = shift;
 
 	do_stop($cgi);
-	system("mplayer -slave -quiet -input file=$MplayerRemote::fifo -playlist $MplayerRemote::playlist -input nodefault-bindings -noconfig all &");
+	system("mplayer -slave -quiet -input file=$MplayerRemote::fifo -playlist $MplayerRemote::playlist -input nodefault-bindings &");
     }
 
     sub do_stop {
@@ -171,13 +201,17 @@ our $fifo = "$dir/fifo";
 	return if !ref $cgi;
 
 	print $cgi->header;
-	print $cgi->start_html('mplayer remote');
+	print $cgi->start_html(-title => 'mplayer remote',
+			       -onkeydown => 'keypress(event)',
+			       -onload => 'document.getElementById("linknext").focus();',
+			       -script => $JSCRIPT);
+
 	
 	print $cgi->p($cgi->a({href=>$cgi->path_info()},'again'))
 	    unless $cgi->path_info() eq '/';
 
 	print $cgi->p(
-	    $cgi->a({href=>"/prev"    },'|<'),
+	    $cgi->a({href=>"/prev", id=>"first" },'|<'),
 	    ' : ',
 	    $cgi->a({href=>"/fr"      },'<<'),
 	    ' : ',
@@ -194,6 +228,19 @@ our $fifo = "$dir/fifo";
 	    $cgi->a({href=>"/start"   },'|>'),
 	    ' : ',
 	    $cgi->a({href=>"/stop"    },'[]' ),
+	    $cgi->br(),
+	    $cgi->br(),
+	    'direct commands:',
+	    $cgi->br(),
+	    'pause:<i>space</i>',
+	    $cgi->br(),
+	    'start/stop:<i>F/V</i>',
+	    $cgi->br(),
+	    'next/prev:<i>D/C</i>',
+	    $cgi->br(),
+	    'vol+/-:<i>S/X</i>',
+	    $cgi->br(),
+	    'seek:<i>A/Z</i>',
 	    $cgi->br(),
 	    $cgi->br(),
 	    $cgi->small('mplayer remote')
