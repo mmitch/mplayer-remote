@@ -51,6 +51,15 @@ our $fifo = "$dir/fifo";
         );
 
     my $JSCRIPT=<<END;
+
+    function execute(url)
+    {
+	var xmlHttp;
+	xmlHttp = new XMLHttpRequest(); 
+	xmlHttp.open( "GET", url, true );
+	xmlHttp.send( null );
+    }
+
     function keypress(e)
     {
 	var keynum;
@@ -58,43 +67,43 @@ our $fifo = "$dir/fifo";
 	    else
 	    if(window.event) { keynum = e.keyCode; } // IE
 	    
-	    if (keynum == 70) { window.location = '/start' }
+	    if (keynum == 70) { execute('/start') }
         else
-	    if (keynum == 86) { window.location = '/stop' }
+	    if (keynum == 86) { execute('/stop') }
         else
-	    if (keynum == 68) { window.location = '/next' }
+	    if (keynum == 68) { execute('/next') }
         else
-	    if (keynum == 67) { window.location = '/prev' }
+	    if (keynum == 67) { execute('/prev') }
         else
-	    if (keynum == 32) { window.location = '/pause' }
+	    if (keynum == 32) { execute('/pause') }
         else
-	    if (keynum == 65) { window.location = '/ff' }
+	    if (keynum == 65) { execute('/ff') }
         else
-	    if (keynum == 90) { window.location = '/fr' }
+	    if (keynum == 90) { execute('/fr') }
         else
-	    if (keynum == 83) { window.location = '/volup' }
+	    if (keynum == 83) { execute('/volup') }
         else
-	    if (keynum == 88) { window.location = '/voldown' }
+	    if (keynum == 88) { execute('/voldown') }
         else
-	    if (keynum == 81) { window.location = '/volset/0' }
+	    if (keynum == 81) { execute('/volset/0') }
         else
-	    if (keynum == 87) { window.location = '/volset/12' }
+	    if (keynum == 87) { execute('/volset/12') }
         else
-	    if (keynum == 69) { window.location = '/volset/23' }
+	    if (keynum == 69) { execute('/volset/23') }
         else
-	    if (keynum == 82) { window.location = '/volset/34' }
+	    if (keynum == 82) { execute('/volset/34') }
         else
-	    if (keynum == 84) { window.location = '/volset/45' }
+	    if (keynum == 84) { execute('/volset/45') }
         else
-	    if (keynum == 89) { window.location = '/volset/56' }
+	    if (keynum == 89) { execute('/volset/56') }
         else
-	    if (keynum == 85) { window.location = '/volset/67' }
+	    if (keynum == 85) { execute('/volset/67') }
         else
-	    if (keynum == 73) { window.location = '/volset/78' }
+	    if (keynum == 73) { execute('/volset/78') }
         else
-	    if (keynum == 79) { window.location = '/volset/89' }
+	    if (keynum == 79) { execute('/volset/89') }
         else
-	    if (keynum == 80) { window.location = '/volset/100' }
+	    if (keynum == 80) { execute('/volset/100') }
     }
 END
     ;
