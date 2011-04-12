@@ -46,6 +46,7 @@ our $fifo = "$dir/fifo";
 	'fr'      => \&do_fr,
 	'volup'   => \&do_volup,
 	'voldown' => \&do_voldown,
+	'volset'  => \&do_volset,
 	''        => \&do_nothing,
         );
 
@@ -74,6 +75,26 @@ our $fifo = "$dir/fifo";
 	    if (keynum == 83) { window.location = '/volup' }
         else
 	    if (keynum == 88) { window.location = '/voldown' }
+        else
+	    if (keynum == 81) { window.location = '/volset/0' }
+        else
+	    if (keynum == 87) { window.location = '/volset/12' }
+        else
+	    if (keynum == 69) { window.location = '/volset/23' }
+        else
+	    if (keynum == 82) { window.location = '/volset/34' }
+        else
+	    if (keynum == 84) { window.location = '/volset/45' }
+        else
+	    if (keynum == 89) { window.location = '/volset/56' }
+        else
+	    if (keynum == 85) { window.location = '/volset/67' }
+        else
+	    if (keynum == 73) { window.location = '/volset/78' }
+        else
+	    if (keynum == 79) { window.location = '/volset/89' }
+        else
+	    if (keynum == 80) { window.location = '/volset/100' }
     }
 END
     ;
@@ -189,6 +210,14 @@ END
 	osd('(o)');
     }
 
+    sub do_volset {
+	my $cgi = shift;
+
+	my $vol = get_parm($cgi, '90');
+	cmd("volume $vol 1");
+	osd("(o) = $vol");
+    }
+
     sub do_pause {
 	my $cgi = shift;
 
@@ -241,6 +270,8 @@ END
 	    'vol+/-:<i>S/X</i>',
 	    $cgi->br(),
 	    'seek:<i>A/Z</i>',
+	    $cgi->br(),
+	    'volume:<i>Q..P</i>',
 	    $cgi->br(),
 	    $cgi->br(),
 	    $cgi->small('mplayer remote')
