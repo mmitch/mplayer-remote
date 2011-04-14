@@ -168,7 +168,7 @@ END
 	my $cgi = shift;
 
 	do_stop($cgi);
-	system("mplayer -slave -quiet -input file=$MplayerRemote::fifo -playlist $MplayerRemote::playlist -input nodefault-bindings &");
+	system("mplayer -slave -quiet -input file=$MplayerRemote::fifo -playlist $MplayerRemote::playlist &");
     }
 
     sub do_stop {
