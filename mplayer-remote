@@ -1,4 +1,9 @@
 #!/usr/bin/perl -w
+#
+# mplayer-remote - simple HTTP frontend for mplayer
+#
+# Copyright (C) 2011 Christian Garbs <mitch@cgarbs.de>
+
 package MplayerRemote;
 use strict;
 use POSIX qw(mkfifo);
